@@ -4,8 +4,10 @@ import { gsap } from "gsap";
 
 export default function Home() {
   const sectionRef = useRef(null);
-  const imageLeftRef = useRef(null);
-  const imageRightRef = useRef(null);
+
+  // 4 image pieces
+  const imagePieceRefs = useRef([]);
+
   const imageContainerRef = useRef(null);
   const glowRef = useRef(null);
 
@@ -43,29 +45,42 @@ export default function Home() {
       );
 
       /* =========================
-         IMAGE SPLIT JOIN
+         4 PIECE IMAGE JOIN
       ========================== */
 
       tl.from(
-        imageLeftRef.current,
+        imagePieceRefs.current,
         {
-          x: -180,
           opacity: 0,
-          duration: 1.2,
+          scale: 1.15,
+          duration: 1.4,
+          stagger: 0.08,
+
+          // Each piece comes from different direction
+          x: (index) => {
+            if (index === 0 || index === 2) {
+              return -180;
+            }
+            return 180;
+          },
+
+          y: (index) => {
+            if (index === 0 || index === 1) {
+              return -180;
+            }
+            return 180;
+          },
+
+          rotation: (index) => {
+            if (index === 0) return -8;
+            if (index === 1) return 8;
+            if (index === 2) return 8;
+            return -8;
+          },
+
           ease: "power4.out",
         },
         "-=0.2"
-      );
-
-      tl.from(
-        imageRightRef.current,
-        {
-          x: 180,
-          opacity: 0,
-          duration: 1.2,
-          ease: "power4.out",
-        },
-        "<"
       );
 
       /* =========================
@@ -236,13 +251,11 @@ export default function Home() {
           items-center
         "
       >
-
         {/* =================================
             LEFT CONTENT
         ================================= */}
 
         <div>
-
           {/* Label */}
 
           <p
@@ -274,9 +287,7 @@ export default function Home() {
             "
           >
             Hi, I'm{" "}
-            <span className="text-[#5274C4]">
-              Sunakshi
-            </span>
+            <span className="text-[#5274C4]">Sunakshi</span>
           </h1>
 
           {/* Role */}
@@ -306,12 +317,10 @@ export default function Home() {
               mb-8
             "
           >
-            Frontend Developer with 1 year of experience
-            building responsive and user-friendly web
-            applications. Skilled in React.js, JavaScript,
-            Next.js, Tailwind CSS and REST API integration,
-            with working knowledge of Node.js, Express.js
-            and MongoDB.
+            Frontend Developer with 1 year of experience building responsive
+            and user-friendly web applications. Skilled in React.js,
+            JavaScript, Next.js, Tailwind CSS and REST API integration, with
+            working knowledge of Node.js, Express.js and MongoDB.
           </p>
 
           {/* =================================
@@ -327,7 +336,6 @@ export default function Home() {
               mb-9
             "
           >
-
             <div>
               <span
                 className="
@@ -359,9 +367,7 @@ export default function Home() {
                 10+
               </span>
 
-              <span className="text-sm text-[#737B89]">
-                Projects
-              </span>
+              <span className="text-sm text-[#737B89]">Projects</span>
             </div>
 
             <div className="w-px bg-white/10" />
@@ -378,11 +384,8 @@ export default function Home() {
                 MERN
               </span>
 
-              <span className="text-sm text-[#737B89]">
-                Stack
-              </span>
+              <span className="text-sm text-[#737B89]">Stack</span>
             </div>
-
           </div>
 
           {/* =================================
@@ -397,7 +400,6 @@ export default function Home() {
               gap-4
             "
           >
-
             {/* View Projects */}
 
             <a
@@ -445,9 +447,7 @@ export default function Home() {
             >
               Contact Me
             </a>
-
           </div>
-
         </div>
 
         {/* =================================
@@ -461,7 +461,6 @@ export default function Home() {
             lg:justify-end
           "
         >
-
           <div
             className="
               relative
@@ -471,7 +470,6 @@ export default function Home() {
               h-[460px]
             "
           >
-
             {/* =================================
                 BLUE GLOW
             ================================= */}
@@ -579,23 +577,24 @@ export default function Home() {
                 z-10
               "
             >
-
               {/* =================================
-                  LEFT IMAGE HALF
+                  4 PIECE IMAGE
               ================================= */}
 
+              {/* TOP LEFT */}
+
               <div
-                ref={imageLeftRef}
+                ref={(el) => (imagePieceRefs.current[0] = el)}
                 className="
                   absolute
-                  inset-y-0
+                  top-0
                   left-0
                   w-1/2
+                  h-1/2
                   overflow-hidden
                   z-10
                 "
               >
-
                 <img
                   src={img1}
                   alt="Sunakshi"
@@ -603,31 +602,28 @@ export default function Home() {
                     absolute
                     top-0
                     left-0
-                    h-full
                     w-[200%]
+                    h-[200%]
                     max-w-none
                     object-cover
                   "
                 />
-
               </div>
 
-              {/* =================================
-                  RIGHT IMAGE HALF
-              ================================= */}
+              {/* TOP RIGHT */}
 
               <div
-                ref={imageRightRef}
+                ref={(el) => (imagePieceRefs.current[1] = el)}
                 className="
                   absolute
-                  inset-y-0
+                  top-0
                   right-0
                   w-1/2
+                  h-1/2
                   overflow-hidden
                   z-10
                 "
               >
-
                 <img
                   src={img1}
                   alt="Sunakshi"
@@ -635,13 +631,70 @@ export default function Home() {
                     absolute
                     top-0
                     right-0
-                    h-full
                     w-[200%]
+                    h-[200%]
                     max-w-none
                     object-cover
                   "
                 />
+              </div>
 
+              {/* BOTTOM LEFT */}
+
+              <div
+                ref={(el) => (imagePieceRefs.current[2] = el)}
+                className="
+                  absolute
+                  bottom-0
+                  left-0
+                  w-1/2
+                  h-1/2
+                  overflow-hidden
+                  z-10
+                "
+              >
+                <img
+                  src={img1}
+                  alt="Sunakshi"
+                  className="
+                    absolute
+                    bottom-0
+                    left-0
+                    w-[200%]
+                    h-[200%]
+                    max-w-none
+                    object-cover
+                  "
+                />
+              </div>
+
+              {/* BOTTOM RIGHT */}
+
+              <div
+                ref={(el) => (imagePieceRefs.current[3] = el)}
+                className="
+                  absolute
+                  bottom-0
+                  right-0
+                  w-1/2
+                  h-1/2
+                  overflow-hidden
+                  z-10
+                "
+              >
+                <img
+                  src={img1}
+                  alt="Sunakshi"
+                  className="
+                    absolute
+                    bottom-0
+                    right-0
+                    w-[200%]
+                    h-[200%]
+                    max-w-none
+                    object-cover
+                  "
+                />
               </div>
 
               {/* =================================
@@ -662,7 +715,7 @@ export default function Home() {
               />
 
               {/* =================================
-                  CENTER IMAGE LINE
+                  CENTER VERTICAL LINE
               ================================= */}
 
               <div
@@ -673,6 +726,23 @@ export default function Home() {
                   -translate-x-1/2
                   h-full
                   w-px
+                  bg-white/10
+                  z-30
+                "
+              />
+
+              {/* =================================
+                  CENTER HORIZONTAL LINE
+              ================================= */}
+
+              <div
+                className="
+                  absolute
+                  top-1/2
+                  left-0
+                  -translate-y-1/2
+                  w-full
+                  h-px
                   bg-white/10
                   z-30
                 "
@@ -696,7 +766,6 @@ export default function Home() {
                   pointer-events-none
                 "
               />
-
             </div>
 
             {/* =================================
@@ -791,7 +860,6 @@ export default function Home() {
                 z-40
               "
             >
-
               <p
                 className="
                   text-[10px]
@@ -813,13 +881,9 @@ export default function Home() {
               >
                 1+ Years
               </p>
-
             </div>
-
           </div>
-
         </div>
-
       </div>
     </section>
   );
